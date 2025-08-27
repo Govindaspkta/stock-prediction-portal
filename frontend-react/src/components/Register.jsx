@@ -1,16 +1,19 @@
 import React,{useReducer, useState} from "react"
 import Header from "./Header"
 import axios from 'axios'
-
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faSpinner} from '@fortawesome/free-solid-svg-icons'
 const Register = () => {
   const [username,setUsername]=useState('')
   const [email,setEmail]=useState('')
   const [password,setpassword]=useState('')
   const [errors,setErrors]=useState({})
   const [success,setSuccess]=useState(false)
+  const [loading,setLoading]=useState(false)
 
   const handleRegistration = async (e) =>{
     e.preventDefault();
+    setLoading(true)
     const userData={
       username,email, password
     }
@@ -26,7 +29,11 @@ catch(error){
   console.log('Registration error:',error.response.data)
 
 
-}}
+}
+finally{
+setLoading(false)
+}
+  }
   return (
 
 
@@ -51,8 +58,16 @@ catch(error){
            <small>{errors.password && <div className="text-danger"> {errors.password}</div>}</small>
       </div>
       {success && <div className="alert alert-success">Registration Successful</div>}
-        <button type="submit" className="btn btn-info d-block mx-auto" >Register
+      {loading ? (
+      <button type="submit" className="btn btn-info d-block mx-auto" disabled><FontAwesomeIcon icon={faSpinner}></FontAwesomeIcon>Please Wait</button>
+      ):
+      (
+             <button type="submit" className="btn btn-info d-block mx-auto" >Register
         </button>
+      )
+
+      }
+   
 
     </form>
   </div>
