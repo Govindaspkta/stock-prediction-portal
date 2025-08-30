@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'accounts',
     'api',
     'corsheaders',
-    'rest_frame000work_simplejwt',
+    'rest_framework_simplejwt',
     
 ]
 

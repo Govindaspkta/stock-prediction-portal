@@ -57,7 +57,7 @@ setLoading(false)
         <input type="password" className="form-control mb-5" placeholder="password please" value={password} onChange={(e)=>setpassword(e.target.value)} />
            <small>{errors.password && <div className="text-danger"> {errors.password}</div>}</small>
       </div>
-      {success && <div className="alert alert-success">Registration Successful</div>}
+      {success && <div claccesssName="alert alert-sus">Registration Successful</div>}
       {loading ? (
       <button type="submit" className="btn btn-info d-block mx-auto" disabled><FontAwesomeIcon icon={faSpinner}></FontAwesomeIcon>Please Wait</button>
       ):
