@@ -4,7 +4,7 @@ import {faSpinner} from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
 import { AuthContext } from '../AuthProvider'
-import Header  from './Header'
+
 const Login = () => {
 
   const[username,setUsername] =useState('')
