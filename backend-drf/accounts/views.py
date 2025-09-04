@@ -3,6 +3,7 @@ from .serializers import UserSerializer
 from rest_framework import generics
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny
+from rest_framework.views improt APIView
 
 class RegisterView(generics.CreateAPIView):
     queryset=User.objects.all()
@@ -10,3 +11,4 @@ class RegisterView(generics.CreateAPIView):
     permission_classes=[AllowAny]
 
 
+class ProtectedView()
