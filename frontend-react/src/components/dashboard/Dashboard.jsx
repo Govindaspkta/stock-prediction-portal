@@ -4,14 +4,10 @@ import axiosInstance from '../../axiosInstance'
 
 const Dashboard = () => {
   
-const accessToken=localStorage.getItem('access_token')     
 useEffect(() =>{
     const fetchProtectedData = async() =>{
         try{
 const response=await axiosInstance.get('/protected-view/',{
-    headers:{
-        Authorization: `Bearer ${accessToken}`
-    }
 
 })
 console.log("success: ",response.data);
