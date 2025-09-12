@@ -3,7 +3,7 @@ import { AuthContext } from './AuthProvider'
 import { Navigate } from 'react-router-dom'
 
 
-const privateRoute = ({children}) => {
+const PrivateRoute = ({children}) => {
     const {isLoggedIn}=useContext(AuthContext)
 
   return  isLoggedIn ? (
@@ -13,4 +13,4 @@ const privateRoute = ({children}) => {
   )
 }
 
-export default privateRoute
+export default PrivateRoute

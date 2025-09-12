@@ -8,7 +8,8 @@ import { BrowserRouter, Routes, Route} from 'react-router-dom'
 import Login from './components/Login'
 import AuthProvider from './AuthProvider'
 import Dashboard from './components/dashboard/dashboard'
-import privateRoute from './privateRoute'
+import PrivateRoute from './privateRoute'
+import PublicRoute from './publicRoute'
 function App() {
   return(
 
@@ -19,8 +20,8 @@ function App() {
 <Header />
 <Routes>
   <Route path='/' element={<Main />} />
-  <Route path='/register' element={<Register />} />
-  <Route path='/login' element={<Login />} />
+  <Route path='/register' element={<publicRoute><Register /></publicRoute>} />
+  <Route path='/login' element={<publicRoute><Login /></publicRoute>} />
   <Route path='/dashboard' element={<privateRoute><Dashboard /></privateRoute>} />
 </Routes>
 
