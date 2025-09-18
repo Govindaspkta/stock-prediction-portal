@@ -16,7 +16,7 @@ class ProtectedView(APIView):
     permission_classes=[IsAuthenticated]
     def self(self,request):
         response={
-        'status':'Request was permitted'
+        'status' : 'Request was permitted'
         }
         
         return Response(response)
