@@ -15,16 +15,23 @@ const Login = () => {
   const{isLoggedIn,setIsLoggedIn} =useContext(AuthContext)
 
 
-  const handleLogin = async (e) =>{
-    e.preventDefault()
+  const handleLogin = async(e) => {
+    e.preventDefault();
     setLoading(true)
-    const userData= {
-      username,password
-    }
-    console.log('USer Data', userData)
+    
+const userData={username,password}
+
+if(!username || !password){
+  setError("Please enter both username and password")
+  setLoading(false)
+  return;
+
+  
+}
+
 
     try{
-      const response=await axios.post('http://127.0.0.1:8000/api/v1/token/',userData)
+      const response= await axios.post('http://127.0.0.1:8000/api/v1/token/',userData)
       localStorage.setItem('accessToken',response.data.access)
       localStorage.setItem('refreshToken',response.data.refresh)
       setIsLoggedIn(true)

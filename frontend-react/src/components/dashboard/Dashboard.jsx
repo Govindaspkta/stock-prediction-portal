@@ -5,6 +5,19 @@ import axiosInstance from '../../axiosInstance'
 const Dashboard = () => {
   const [ticker,setTicker]=useState('')
 
+  const handleSubmit = async(e) =>{
+e.preventDefault();
+try{
+    const response=await axiosInstance.post('/predict/', 
+        {
+            ticker:ticker
+
+    });
+}
+catch(error){
+    console.error('caught error while making api requetst')
+}
+  }
 useEffect(() =>{
     const fetchProtectedData = async() =>{
         try{
@@ -14,27 +27,29 @@ const response=await axiosInstance.get('/protected-view/',{
 console.log("success: ",response.data);
         }
         catch(error ) {
-            console.error('error ins fetching data')
+            console.error('error in fetching data')
         }
     }
     fetchProtectedData();
  }, [])
 
     return (
-        <>
+
  <div className="container">
     <div className="row">
         <div className="col-md-6 mx-auto">
-            <form  >
+            <form onSubmit={handleSubmit} >
                 <input type="text" className='form-control' placeholder='Enter a Stock Ticker'
-                onChange={(e) => setTicker(e.target.value)}  required >
-                </input>
-            <button type='submit' className='btn bt-info-mt-3' >See Prediction</button>
+                onChange={(e) => setTicker(e.target.value)}  required  />
+               
+            <button type="submit" className="btn btn-info mt-3 mx-auto" >See Prediction</button>
+                   
+            
             </form>
         </div>
     </div>
  </div>
-    </>
+
 
     
   )
