@@ -8,6 +8,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import yfinance as yf
 from datetime import datetime
+import os
+from django.conf import settings
 # Create your views here.
 
 
@@ -27,5 +29,23 @@ class StockPredictionAPIView(APIView):
                 return Response(
                     {'error': 'No data found fro the given ticker'},
                                         status =status.HTTP_404_NOT_FOUND)
+            df=df.reset_index()
+            print(df)
+            #generate basic plot
+            plt.switch_backend('AGG')
+            plt.figure(figsize=(12,5))
+            plt.plot(df.Close,label='closing Price')
+            plt.title(f'Closing Price of {ticker}')
+            plt.xlabel('Days')
+            plt.ylabel('Close Price')
+            plt.legend()
+            
+            #saving the plot to a file
+            plot_img_path=f'{ticker}_plot.png'
+            image_path=os.path.join(settings.MEDIA_ROOT,plot_img_path)
+            plt.savefig(image_path)
+            plt.close()
+            image_url=settings.MEDIA_URL + plot_img_path
+            print(image_url)
             
             return Response({'status ' :'success','ticker':ticker})
