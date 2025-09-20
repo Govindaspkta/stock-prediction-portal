@@ -1,38 +1,47 @@
 import React, {useEffect,useState} from 'react'
 import axios from 'axios'
 import axiosInstance from '../../axiosInstance'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faSpinner} from '@fortawesome/free-solid-svg-icons'
+
 
 const Dashboard = () => {
-  const [ticker,setTicker]=useState('')
+const [ticker,setTicker]=useState('')
+const [error,setError]=useState()
+  const[loading,setLoading]=useState(false)
+useEffect(() =>{
+    const fetchProtectedData = async() =>{
+        try{
+    const response=await axiosInstance.get('/protected-view/');
 
-  const handleSubmit = async(e) =>{
+        }
+        catch(error ) {
+            console.error('error in fetching data',error)
+        }
+    }
+    fetchProtectedData();
+ }, [])
+const handleSubmit = async(e) =>{
 e.preventDefault();
+setLoading(true)
 try{
     const response=await axiosInstance.post('/predict/', 
         {
             ticker:ticker
 
     });
+    console.log(response.data)
+    if(response.data.error){
+        setError(response.data.error)
+    }
 }
 catch(error){
     console.error('caught error while making api requetst')
 }
+finally{
+setLoading(false);
+}
   }
-useEffect(() =>{
-    const fetchProtectedData = async() =>{
-        try{
-const response=await axiosInstance.get('/protected-view/',{
-
-})
-console.log("success: ",response.data);
-        }
-        catch(error ) {
-            console.error('error in fetching data')
-        }
-    }
-    fetchProtectedData();
- }, [])
-
     return (
 
  <div className="container">
@@ -41,8 +50,12 @@ console.log("success: ",response.data);
             <form onSubmit={handleSubmit} >
                 <input type="text" className='form-control' placeholder='Enter a Stock Ticker'
                 onChange={(e) => setTicker(e.target.value)}  required  />
-               
-            <button type="submit" className="btn btn-info mt-3 mx-auto" >See Prediction</button>
+               <small>{error && <div className="text-danger">{error}</div>}</small>
+            <button type="submit" className="btn btn-info mt-3 mx-auto" >
+
+{loading  ? <span><FontAwesomeIcon icon={faSpinner}spin /> Please Wait..</span> :'See Prediction'}
+
+            </button>
                    
             
             </form>
