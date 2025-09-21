@@ -9,6 +9,7 @@ const Dashboard = () => {
 const [ticker,setTicker]=useState('')
 const [error,setError]=useState()
   const[loading,setLoading]=useState(false)
+  const [plot,setPlot]=useState()
 useEffect(() =>{
     const fetchProtectedData = async() =>{
         try{
@@ -31,6 +32,11 @@ try{
 
     });
     console.log(response.data)
+
+    //set plots
+    const backendRoot=import.meta.env.VITE_BACKEND_ROOT
+    const plotUrl= `${backendRoot}${response.data.plot_img}`
+    setPlot(plotUrl)
     if(response.data.error){
         setError(response.data.error)
     }
@@ -59,7 +65,17 @@ setLoading(false);
                    
             
             </form>
+
         </div>
+         {/* Print prediction plots */}
+         <div className="prediction mt-5">
+            <div className="p-5">
+
+                {plot && (
+                    <img src={plot}  style ={{maxWidth:'100%' }} />
+                )}
+            </div>
+         </div>
     </div>
  </div>
 

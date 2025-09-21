@@ -147,5 +147,5 @@ SIMPLE_JWT ={
 
 
 #media files config
-MEDIA_URL='/media'
+MEDIA_URL='/media/'
 MEDIA_ROOT=BASE_DIR/'media'
