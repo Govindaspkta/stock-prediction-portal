@@ -14,6 +14,8 @@ from django.conf import settings
 
 
 class StockPredictionAPIView(APIView):
+    def get(self,request):
+        return Response({'message':'Protected view is working'})
     def post(self,request):
         serializer=StockPredictionSerializer(data=request.data)
         if serializer.is_valid():
@@ -45,8 +47,9 @@ class StockPredictionAPIView(APIView):
             image_path=os.path.join(settings.MEDIA_ROOT,plot_img_path)
             plt.savefig(image_path)
             plt.close()
+            
             plot_img=settings.MEDIA_URL + plot_img_path
             print(plot_img)
             
             return Response({'status ' :'success',
-                             'plot':plot_img})
+                             'plot_img':plot_img})
