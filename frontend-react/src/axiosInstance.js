@@ -10,7 +10,14 @@ const axiosInstance=axios.create({
 })
 
 
-axiosInstance.interceptors.request.use(
+axiosInstance.interceptors.request.use(/* The backtick character (`) is used in JavaScript template
+literals to create a string with interpolation. This allows
+you to embed expressions or variables within a string by
+using `${}` syntax. In the provided code snippet, the
+backticks are used to create a string template for setting
+the Authorization header in the Axios request with the access
+token. */
+
     function(config){
         console.log('request==',config)
         const accessToken=localStorage.getItem('accessToken')

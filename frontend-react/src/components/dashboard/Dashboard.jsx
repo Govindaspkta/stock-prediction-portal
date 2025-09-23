@@ -10,6 +10,7 @@ const [ticker,setTicker]=useState('')
 const [error,setError]=useState()
   const[loading,setLoading]=useState(false)
   const [plot,setPlot]=useState()
+  const[ma100,setMA100]=useState()
 useEffect(() =>{
     const fetchProtectedData = async() =>{
         try{
@@ -36,6 +37,8 @@ try{
     //set plots
     const backendRoot=import.meta.env.VITE_BACKEND_ROOT
     const plotUrl= `${backendRoot}${response.data.plot_img}`
+    const ma100url=`${backendRoot}${response.data.plot_100_dma}`
+    setMA100(ma100url)
     setPlot(plotUrl)
     if(response.data.error){
         setError(response.data.error)
@@ -73,6 +76,12 @@ setLoading(false);
 
                 {plot && (
                     <img src={plot}  style ={{maxWidth:'100%' }} />
+                )}
+            </div>
+            <div className="p-3">
+                {ma100 && (
+                <img src={ma100}  style ={{maxWidth:'100%' }} />
+
                 )}
             </div>
          </div>
