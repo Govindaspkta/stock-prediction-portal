@@ -109,9 +109,20 @@ class StockPredictionAPIView(APIView):
             print('y_test =>',y_test )
             
             #plot the final predictions
-            
+             
+            plt.switch_backend('AGG')
+            plt.figure(figsize=(12,5))
+            plt.plot(y_test,'b',label='Original  Price')
+            plt.plot(y_predicted, 'r' ,label='Predicted PRice')
+            plt.title(f'Final Prediction for  {ticker}')
+            plt.xlabel('Days')
+            plt.ylabel(' Price')
+            plt.legend()
+            plot_img_path=f'{ticker}_final_prediction.png'
+            plot_prediction=save_plot(plot_img_path)
                          
             return Response({'status ' :'success',
                              'plot_img':plot_img,
                              'plot_100_dma':plot_100_dma,
-                             'plot_200_dma':plot_200_dma})
+                             'plot_200_dma':plot_200_dma,
+                             'plot_prediction':plot_prediction})
