@@ -12,6 +12,7 @@ const [error,setError]=useState()
   const [plot,setPlot]=useState()
   const[ma100,setMA100]=useState()
   const [ma200,setMA200]=useState()
+  const[prediction,setPrediction]=useState()
 useEffect(() =>{
     const fetchProtectedData = async() =>{
         try{
@@ -40,10 +41,13 @@ try{
     const plotUrl= `${backendRoot}${response.data.plot_img}`
     const ma100url=`${backendRoot}${response.data.plot_100_dma}`
     const ma200url=`${backendRoot}${response.data.plot_200_dma}`
+    const predictionurl=`${backendRoot}${response.plot_prediction}`
 
     setPlot(plotUrl)
     setMA100(ma100url)
     setMA200(ma200url)
+    setPrediction(predictionurl)
+
     if(response.data.error){
         setError(response.data.error)
     }
@@ -91,6 +95,12 @@ setLoading(false);
             <div className="p-3">
                 {ma200 && (
                     <img src= {ma200} style= {{maxWidth:'100%'}} />
+                )}
+            </div>
+
+            <div className="p-3">
+                {prediction && (
+                    <img src= {prediction} style= {{maxWidth:'100%'}} />
                 )}
             </div>
          </div>

@@ -102,8 +102,8 @@ class StockPredictionAPIView(APIView):
             y_predicted=model.predict(x_test)         
             
             #revert the scaled price to original prices
-            y_predicted=scaler.inverse_transform(y_predicted.reshape(-1,1)).flatten()
-            y_test=scaler.inverse_transform(y_test.reshape(-1,1).flatten())
+            y_predicted=scaler.inverse_transform(y_predicted.reshape(-1,1))
+            y_test=scaler.inverse_transform(y_test.reshape(-1,1))
             
             print('y_predicted => ',y_predicted)
             print('y_test =>',y_test )
@@ -125,4 +125,4 @@ class StockPredictionAPIView(APIView):
                              'plot_img':plot_img,
                              'plot_100_dma':plot_100_dma,
                              'plot_200_dma':plot_200_dma,
-                             'plot_prediction':plot_prediction})
+                             'plot_prediction':plot_prediction,})
