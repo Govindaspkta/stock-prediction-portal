@@ -13,6 +13,10 @@ const [error,setError]=useState()
   const[ma100,setMA100]=useState()
   const [ma200,setMA200]=useState()
   const[prediction,setPrediction]=useState()
+  const[mse,setMSE]=useState()
+    const[rmse,setRMSE]=useState()
+    const[r2,setR2]=useState()
+
 useEffect(() =>{
     const fetchProtectedData = async() =>{
         try{
@@ -41,12 +45,15 @@ try{
     const plotUrl= `${backendRoot}${response.data.plot_img}`
     const ma100url=`${backendRoot}${response.data.plot_100_dma}`
     const ma200url=`${backendRoot}${response.data.plot_200_dma}`
-    const predictionurl=`${backendRoot}${response.plot_prediction}`
+    const predictionurl=`${backendRoot}${response.data.plot_prediction}`
 
     setPlot(plotUrl)
     setMA100(ma100url)
     setMA200(ma200url)
     setPrediction(predictionurl)
+    setMSE(response.data.mse)
+    setRMSE(response.data.rmse)
+    setR2(response.data.r2)
 
     if(response.data.error){
         setError(response.data.error)
@@ -102,6 +109,14 @@ setLoading(false);
                 {prediction && (
                     <img src= {prediction} style= {{maxWidth:'100%'}} />
                 )}
+            </div>
+            <div className="text-light p-3">
+                <h4>Model Evaluation</h4>
+                <p>Mean Squared Error (MSE) : {mse}</p>
+                <p>Root Mean Squared Error (RMSE) : {rmse}</p>
+                <p>R-Squared(R2) : {r2}</p>
+
+
             </div>
          </div>
     </div>
