@@ -11,9 +11,7 @@ from datetime import datetime
 import os
 from django.conf import settings
 from .utils import save_plot
-from sklearn.preprocessing import MinMaxScaler
 from keras.models import load_model
-from sklearn.metrics import mean_squared_error,r2_score
 
 
 
@@ -80,17 +78,19 @@ class StockPredictionAPIView(APIView):
             #splitting data into training & testing datasets
             data_training=pd.DataFrame(df.Close[0:int(len(df) * 0.7)])
             data_testing=pd.DataFrame(df.Close[int(len(df) * 0.7):int (len(df))])
- 
-            #SCALING data btn 0 and 1
-            scaler= MinMaxScaler(feature_range=(0,1))
-            
+
             #loading ml model
             model=load_model('stock_prediction_model.keras')
             
             #Preparing test data
             past_100_days=data_training.tail(100)
             final_df=pd.concat([past_100_days,data_testing],ignore_index=True)
-            input_data=scaler.fit_transform(final_df)
+
+            #SCALING data btn 0 and 1 (manual, no sklearn)
+            data_array = final_df.values.astype(float)
+            data_min = data_array.min()
+            data_max = data_array.max()
+            input_data = (data_array - data_min) / (data_max - data_min)
             
             x_test= []
             y_test= []
@@ -102,9 +102,9 @@ class StockPredictionAPIView(APIView):
             #making predictions
             y_predicted=model.predict(x_test)         
             
-            #revert the scaled price to original prices
-            y_predicted=scaler.inverse_transform(y_predicted.reshape(-1,1))
-            y_test=scaler.inverse_transform(y_test.reshape(-1,1))
+            #revert the scaled price to original prices (manual inverse)
+            y_predicted = y_predicted.reshape(-1,1) * (data_max - data_min) + data_min
+            y_test = y_test.reshape(-1,1) * (data_max - data_min) + data_min
             
             print('y_predicted => ',y_predicted)
             print('y_test =>',y_test )
@@ -122,16 +122,15 @@ class StockPredictionAPIView(APIView):
             plot_img_path=f'{ticker}_final_prediction.png'
             plot_prediction=save_plot(plot_img_path)
             
-            #MODEL EVAL
+            #MODEL EVAL (manual, no sklearn)
             #mse mEAN Squared Error
-            mse=mean_squared_error(y_test,y_predicted)
-               
+            mse = float(np.mean((y_test - y_predicted) ** 2))
                
                #Roor Mean Squared Error(RMSE)   
             rmse=np.sqrt(mse)    
             
             #RSquared
-            r2=r2_score(y_test,y_predicted)     
+            r2 = float(1 - (np.sum((y_test - y_predicted) ** 2) / np.sum((y_test - np.mean(y_test)) ** 2)))
              
             return Response({'status ' :'success',
                              'plot_img':plot_img,
