@@ -40,7 +40,6 @@ try{
     });
     console.log(response.data)
 
-    //set plots
     const backendRoot=import.meta.env.VITE_BACKEND_ROOT
     const plotUrl= `${backendRoot}${response.data.plot_img}`
     const ma100url=`${backendRoot}${response.data.plot_100_dma}`
@@ -61,6 +60,7 @@ try{
 }
 catch(error){
     console.error('caught error while making api requetst')
+    setError('Something went wrong. Try a different ticker.')
 }
 finally{
 setLoading(false);
@@ -68,62 +68,85 @@ setLoading(false);
   }
     return (
 
- <div className="container">
+ <div className="container py-4">
     <div className="row">
         <div className="col-md-6 mx-auto">
-            <form onSubmit={handleSubmit} >
-                <input type="text" className='form-control' placeholder='Enter a Stock Ticker'
-                onChange={(e) => setTicker(e.target.value)}  required  />
-               <small>{error && <div className="text-danger">{error}</div>}</small>
-            <button type="submit" className="btn btn-info mt-3 mx-auto" >
+            <div className="card shadow-sm border-0 bg-dark">
+              <div className="card-body p-4">
+                <h5 className="card-title text-light mb-3">Stock Prediction</h5>
+                <form onSubmit={handleSubmit}>
+                    <div className="input-group">
+                      <input type="text" className='form-control' placeholder='Enter a Stock Ticker (e.g. AAPL)'
+                      onChange={(e) => setTicker(e.target.value.toUpperCase())} value={ticker} required />
+                      <button type="submit" className="btn btn-info" disabled={loading}>
+                        {loading ? <span><FontAwesomeIcon icon={faSpinner} spin /> Predicting...</span> : 'See Prediction'}
+                      </button>
+                    </div>
+                    {error && <div className="text-danger mt-2 small">{error}</div>}
+                </form>
+              </div>
+            </div>
+        </div>
+    </div>
 
-{loading  ? <span><FontAwesomeIcon icon={faSpinner}spin /> Please Wait..</span> :'See Prediction'}
+    {plot && (
+      <div className="row mt-5">
+        <div className="col-12 col-lg-10 mx-auto">
 
-            </button>
-                   
-            
-            </form>
+          <div className="card shadow-sm border-0 mb-4">
+            <div className="card-header">Closing Price</div>
+            <div className="card-body text-center">
+              <img src={plot} className="img-fluid rounded" alt="Closing price" />
+            </div>
+          </div>
+
+          <div className="card shadow-sm border-0 mb-4">
+            <div className="card-header">100-Day Moving Average</div>
+            <div className="card-body text-center">
+              <img src={ma100} className="img-fluid rounded" alt="100 day moving average" />
+            </div>
+          </div>
+
+          <div className="card shadow-sm border-0 mb-4">
+            <div className="card-header">200-Day Moving Average</div>
+            <div className="card-body text-center">
+              <img src={ma200} className="img-fluid rounded" alt="200 day moving average" />
+            </div>
+          </div>
+
+          <div className="card shadow-sm border-0 mb-4">
+            <div className="card-header">Prediction vs Actual</div>
+            <div className="card-body text-center">
+              <img src={prediction} className="img-fluid rounded" alt="Prediction vs actual" />
+            </div>
+          </div>
+
+          <div className="card shadow-sm border-0 mb-5">
+            <div className="card-header">Model Evaluation</div>
+            <div className="card-body">
+              <div className="row text-center">
+                <div className="col-4">
+                  <div className="text-muted small">MSE</div>
+                  <div className="fs-5">{mse?.toFixed(2)}</div>
+                </div>
+                <div className="col-4">
+                  <div className="text-muted small">RMSE</div>
+                  <div className="fs-5">{rmse?.toFixed(2)}</div>
+                </div>
+                <div className="col-4">
+                  <div className="text-muted small">R²</div>
+                  <div className="fs-5">{typeof r2 === 'number' ? r2.toFixed(3) : r2}</div>
+                </div>
+              </div>
+            </div>
+          </div>
 
         </div>
-         {/* Print prediction plots */}
-         <div className="prediction mt-5">
-            <div className="p-5">
-
-                {plot && (
-                    <img src={plot}  style ={{maxWidth:'100%' }} />
-                )}
-            </div>
-            <div className="p-3">
-                {ma100 && (
-                <img src={ma100}  style ={{maxWidth:'100%' }} />
-
-                )}
-            </div>
-            <div className="p-3">
-                {ma200 && (
-                    <img src= {ma200} style= {{maxWidth:'100%'}} />
-                )}
-            </div>
-
-            <div className="p-3">
-                {prediction && (
-                    <img src= {prediction} style= {{maxWidth:'100%'}} />
-                )}
-            </div>
-            <div className="text-light p-3">
-                <h4>Model Evaluation</h4>
-                <p>Mean Squared Error (MSE) : {mse}</p>
-                <p>Root Mean Squared Error (RMSE) : {rmse}</p>
-                <p>R-Squared(R2) : {r2}</p>
-
-
-            </div>
-         </div>
-    </div>
+      </div>
+    )}
  </div>
 
 
-    
   )
 }
 

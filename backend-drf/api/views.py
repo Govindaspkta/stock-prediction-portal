@@ -140,5 +140,5 @@ class StockPredictionAPIView(APIView):
                              'plot_prediction':plot_prediction,
                              'mse':mse,
                              'rmse':rmse,
-                             'r2':'r2'
+                             'r2':r2
                              })

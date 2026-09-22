@@ -46,15 +46,15 @@ setLoading(false)
   <div className="col-md-6 bg-light-dark p-5">
     <h3 className="text-light text-center mb-5">Create an Account</h3>
     <form onSubmit={handleRegistration}>
-      <input type="text" className="form-control mb-3" placeholder="username please" value={username} onChange={(e)=> setUsername(e.target.value)} />
+      <input type="text" className="form-control mb-3" placeholder="username " value={username} onChange={(e)=> setUsername(e.target.value)} />
       <small>{errors.username && <div className="text-danger"> {errors.username}</div>}</small>
 
       <div className="mb-3">
-      <input type="email" className="form-control mb-3" placeholder="email Please"  value={email} onChange={(e)=>setEmail(e.target.value)} />
+      <input type="email" className="form-control mb-3" placeholder="email"  value={email} onChange={(e)=>setEmail(e.target.value)} />
      </div>
 
       <div className="mb-2">
-        <input type="password" className="form-control mb-5" placeholder="password please" value={password} onChange={(e)=>setpassword(e.target.value)} />
+        <input type="password" className="form-control mb-5" placeholder="password " value={password} onChange={(e)=>setpassword(e.target.value)} />
            <small>{errors.password && <div className="text-danger"> {errors.password}</div>}</small>
       </div>
       {success && <div className="alert alert-sus">Registration Successful</div>}

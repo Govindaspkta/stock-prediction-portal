@@ -7,7 +7,7 @@ import Register from './components/Register'
 import { BrowserRouter, Routes, Route} from 'react-router-dom'
 import Login from './components/Login'
 import AuthProvider from './AuthProvider'
-import Dashboard from './components/dashboard/dashboard'
+import Dashboard from './components/dashboard/Dashboard'
 import PublicRoute from './PublicRoute'
 import PrivateRoute from './privateRoute'
 function App() {
