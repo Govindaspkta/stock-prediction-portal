@@ -6,6 +6,7 @@ from rest_framework.response import Response
 import pandas as pd 
 import numpy as np 
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import yfinance as yf
 from datetime import datetime
 import os
@@ -23,9 +24,9 @@ class StockPredictionAPIView(APIView):
         if serializer.is_valid():
             ticker=serializer.validated_data['ticker']
             
-            #fetch the data from  yfinance
+            #fetch the data from  yfinance (last 3 years, not 10 - keeps charts readable)
             now=datetime.now()
-            start=datetime(now.year-10, now.month,now.day)
+            start=datetime(now.year-3, now.month,now.day)
             end=now
             df=yf.download(ticker,start,end)
             print(df)
@@ -38,10 +39,11 @@ class StockPredictionAPIView(APIView):
             #generate basic plot
             plt.switch_backend('AGG')
             plt.figure(figsize=(12,5))
-            plt.plot(df.Close,label='closing Price')
+            plt.plot(df.Date, df.Close,label='closing Price')
             plt.title(f'Closing Price of {ticker}')
-            plt.xlabel('Days')
+            plt.xlabel('Date')
             plt.ylabel('Price')
+            plt.gcf().autofmt_xdate()
             plt.legend()
             
             #saving the plot to a file
@@ -52,11 +54,12 @@ class StockPredictionAPIView(APIView):
             ma100=df.Close.rolling(100).mean()
             plt.switch_backend('AGG')
             plt.figure(figsize=(12,5))
-            plt.plot(df.Close,label='closing Price')
-            plt.plot(ma100, 'r' ,label='100 DMA')
+            plt.plot(df.Date, df.Close,label='closing Price')
+            plt.plot(df.Date, ma100, 'r' ,label='100 DMA')
             plt.title(f'100 days moving avg of {ticker}')
-            plt.xlabel('Days')
+            plt.xlabel('Date')
             plt.ylabel('Price')
+            plt.gcf().autofmt_xdate()
             plt.legend()
             plot_img_path=f'{ticker}_100_dma.png'
             plot_100_dma=save_plot(plot_img_path)
@@ -65,12 +68,13 @@ class StockPredictionAPIView(APIView):
             ma200=df.Close.rolling(200).mean()
             plt.switch_backend('AGG')
             plt.figure(figsize=(12,5))
-            plt.plot(df.Close,label='closing Price')
-            plt.plot(ma100, 'r' ,label='100 DMA')
-            plt.plot(ma200, 'g' ,label='200 DMA')
+            plt.plot(df.Date, df.Close,label='closing Price')
+            plt.plot(df.Date, ma100, 'r' ,label='100 DMA')
+            plt.plot(df.Date, ma200, 'g' ,label='200 DMA')
             plt.title(f'200 days moving avg of  {ticker}')
-            plt.xlabel('Days')
+            plt.xlabel('Date')
             plt.ylabel(' Price')
+            plt.gcf().autofmt_xdate()
             plt.legend()
             plot_img_path=f'{ticker}_200_dma.png'
             plot_200_dma=save_plot(plot_img_path)
@@ -105,6 +109,9 @@ class StockPredictionAPIView(APIView):
             #revert the scaled price to original prices (manual inverse)
             y_predicted = y_predicted.reshape(-1,1) * (data_max - data_min) + data_min
             y_test = y_test.reshape(-1,1) * (data_max - data_min) + data_min
+
+            #dates corresponding to the test predictions
+            test_dates = df['Date'].iloc[int(len(df) * 0.7):].reset_index(drop=True)
             
             print('y_predicted => ',y_predicted)
             print('y_test =>',y_test )
@@ -113,11 +120,12 @@ class StockPredictionAPIView(APIView):
              
             plt.switch_backend('AGG')
             plt.figure(figsize=(12,5))
-            plt.plot(y_test,'b',label='Original  Price')
-            plt.plot(y_predicted, 'r' ,label='Predicted PRice')
+            plt.plot(test_dates, y_test,'b',label='Original  Price')
+            plt.plot(test_dates, y_predicted, 'r' ,label='Predicted PRice')
             plt.title(f'Final Prediction for  {ticker}')
-            plt.xlabel('Days')
+            plt.xlabel('Date')
             plt.ylabel(' Price')
+            plt.gcf().autofmt_xdate()
             plt.legend()
             plot_img_path=f'{ticker}_final_prediction.png'
             plot_prediction=save_plot(plot_img_path)
